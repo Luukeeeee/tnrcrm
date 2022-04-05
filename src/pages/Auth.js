@@ -2,28 +2,35 @@ import { Button, Container, Grid, Paper, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import { red } from '@mui/material/colors';
 import { createUserWithEmailAndPassword, getAuth, updateProfile, signInWithEmailAndPassword } from 'firebase/auth';
-import { addDoc, collection } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 
 import Input from '../components/Input';
-import { auth, db } from '../firebase';
+import { auth } from '../firebase';
 import Selector from '../components/Selector';
 import { LoadingButton } from '@mui/lab';
+import { addDocu } from '../controllers/oneLevel';
 
 const Auth = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
+  const initialFormData = {
     firstName: '',
     lastName: '',
     email: '',
     password: '',
     confirmPassword: ''
-  });
+  };
+  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState(initialFormData);
   const [errMessage, setErrMessage] = useState('');
   const [position, setPosition] = useState('');
   const [isSignIn, setIsSignIn] = useState(true);
 
   const navigation = useNavigate();
+
+  const thenFunc = () => {
+    setFormData(initialFormData);
+    setPosition('');
+    navigation('/');
+  };
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -35,26 +42,17 @@ const Auth = () => {
             updateProfile(auth.currentUser, { displayName: `${formData?.firstName} ${formData?.lastName}` });
           })
           .then(() => {
-            const colRef = collection(db, 'staffs');
-            addDoc(colRef, {
-              firstName: formData?.firstName,
-              lastName: formData?.lastName,
-              email: formData?.email,
-              uid: auth.currentUser.uid,
-              position: position
-            })
-              .then(() => {
-                setFormData({
-                  firstName: '',
-                  lastName: '',
-                  email: '',
-                  password: '',
-                  confirmPassword: ''
-                });
-                setPosition('');
-                navigation('/');
-              })
-              .catch(err => setErrMessage(err.message));
+            addDocu(
+              'staffs',
+              {
+                firstName: formData?.firstName,
+                lastName: formData?.lastName,
+                email: formData?.email,
+                uid: auth.currentUser.uid,
+                position: position
+              },
+              thenFunc()
+            );
           })
           .catch(err => setErrMessage(err.message));
       } else {
@@ -63,13 +61,7 @@ const Auth = () => {
     }
     signInWithEmailAndPassword(auth, formData?.email, formData?.password)
       .then(() => {
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          password: '',
-          confirmPassword: ''
-        });
+        setFormData(initialFormData);
         navigation('/');
       })
       .catch(err => {
@@ -127,6 +119,7 @@ const Auth = () => {
                 grid={5}
                 id="position"
                 name="position"
+                label="Position"
                 value={position}
                 items={['Manager', 'Accountant', 'Bookkeeper', 'Receptionist', 'Financial']}
                 handleChange={e => setPosition(e.target.value)}
