@@ -5,6 +5,11 @@ export default {
     p: 1,
     color: 'white'
   },
+  titleCellUrgent: {
+    backgroundColor: 'red',
+    p: 1,
+    color: 'white'
+  },
   textCell: { display: 'flex', justifyContent: 'space-around', mt: 1 },
   taskCheckBox: { position: 'relative', bottom: 7 },
   checkBox: { display: 'flex', justifyContent: 'center' },

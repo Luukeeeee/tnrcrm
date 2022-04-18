@@ -31,7 +31,6 @@ const TaskRowCollapse = ({ open, item, memos }) => {
   const handleMemoDelete = id => {
     deleteDocu('taskMemos', id);
   };
-  console.log(memos)
 
   return (
     <Collapse in={open} timeout="auto" unmountOnExit sx={{ m: 2 }}>
@@ -64,7 +63,10 @@ const TaskRowCollapse = ({ open, item, memos }) => {
             </Grid>
           </Grid>
           {item.invAmount ? (
-            <Typography variant="subtitle2">{`The charge would be $ ${item.invAmount}`}</Typography>
+            <>
+              <Typography variant="subtitle2">The charge would be</Typography>
+              <Typography variant="subtitle2" sx={{fontWeight: 800}}>{`$ ${item.invAmount}`}</Typography>
+            </>
           ) : (
             <Typography variant="subtitle2">Haven't set price.</Typography>
           )}
@@ -74,8 +76,8 @@ const TaskRowCollapse = ({ open, item, memos }) => {
             </Typography>
           )}
         </Grid>
-        <Divider orientation='vertical' flexItem sx={{display: {md: 'block', xs: 'none'}}} />
-        <Grid item md={9} xs={12} sx={{ pl: {md: 4, xs: 0} }}>
+        <Divider orientation="vertical" flexItem sx={{ display: { md: 'block', xs: 'none' } }} />
+        <Grid item md={9} xs={12} sx={{ pl: { md: 4, xs: 0 } }}>
           <Typography color="primary" varient="h6">
             Memos
           </Typography>

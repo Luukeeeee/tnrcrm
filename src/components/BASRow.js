@@ -66,13 +66,15 @@ const BASRow = ({ item, memos }) => {
     }
   };
 
+  const titleCellStyle = item => (item.urgent ? styles.titleCellUrgent : styles.titleCell);
+
   return (
     <Grid item md={12} xs={12} sx={styles.taskRow}>
       <Paper sx={{ overflow: 'hidden' }}>
         <Grid container>
           <Grid item md={2.132} xs={8}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 <IconButton aria-label="expand row" size="small" sx={{ p: 0, mb: -0.6 }} onClick={() => setOpen(!open)}>
                   {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton>
@@ -85,7 +87,7 @@ const BASRow = ({ item, memos }) => {
           </Grid>
           <Grid item md={0.5} xs={1.8}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Type
               </Typography>
               <Typography variant="caption" sx={styles.textCell}>
@@ -95,7 +97,7 @@ const BASRow = ({ item, memos }) => {
           </Grid>
           <Grid item md={0.6} xs={2.2}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Period
               </Typography>
               <Typography variant="caption" sx={styles.textCell}>
@@ -106,7 +108,7 @@ const BASRow = ({ item, memos }) => {
           <Divider orientation="vertical" flexItem />
           <Grid item md={1.7} xs={12}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Estimate By
               </Typography>
               <Box sx={styles.textCell}>
@@ -129,7 +131,7 @@ const BASRow = ({ item, memos }) => {
           <Divider orientation="vertical" flexItem />
           <Grid item md={0.7} xs={2.4}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 EstApr
               </Typography>
               <Checkbox
@@ -142,7 +144,7 @@ const BASRow = ({ item, memos }) => {
           </Grid>
           <Grid item md={0.53} xs={2.4}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Form
               </Typography>
               <Checkbox
@@ -155,7 +157,7 @@ const BASRow = ({ item, memos }) => {
           </Grid>
           <Grid item md={0.53} xs={2.4}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Inv
               </Typography>
               <Checkbox
@@ -168,7 +170,7 @@ const BASRow = ({ item, memos }) => {
           </Grid>
           <Grid item md={0.53} xs={2.4}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Paid
               </Typography>
               <Checkbox
@@ -181,20 +183,29 @@ const BASRow = ({ item, memos }) => {
           </Grid>
           <Grid item md={0.7} xs={2.36}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Lodged
               </Typography>
-              <Checkbox checked={item.lodged} size="small" sx={styles.checkBox} />
+              <Checkbox
+                checked={item.lodged}
+                size="small"
+                sx={styles.checkBox}
+                onChange={() => handleChange(false, item.id, 'primary', item.lodged, 'lodged')}
+              />
             </Box>
           </Grid>
           <Divider orientation="vertical" flexItem />
           <Grid item md={1.7} xs={12}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Bookkeeper
               </Typography>
               <Box sx={styles.textCell}>
-                <Typography variant="caption">{item.bookkeeperId.name}</Typography>
+                {user.position === 'Manager' || user.position === 'Admin' ? (
+                  <StaffSelector value={item.bookkeeperId} id={item.id} columnName="estimateId" />
+                ) : (
+                  <Typography variant="caption">{item.bookkeeperId.name}</Typography>
+                )}
                 {item.bookkeeperId.id !== '' && (
                   <Checkbox
                     checked={item.bookkept}
@@ -209,11 +220,15 @@ const BASRow = ({ item, memos }) => {
           <Divider orientation="vertical" flexItem />
           <Grid item md={1.7} xs={9}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Accountant
               </Typography>
               <Box sx={styles.textCell}>
-                <Typography variant="caption">{item.accountantId.name}</Typography>
+                {user.position === 'Manager' || user.position === 'Admin' ? (
+                  <StaffSelector value={item.accountantId} id={item.id} columnName="estimateId" />
+                ) : (
+                  <Typography variant="caption">{item.accountantId.name}</Typography>
+                )}
                 {item.accountantId.id !== '' && (
                   <Checkbox
                     checked={item.statementPrepared}
@@ -230,7 +245,7 @@ const BASRow = ({ item, memos }) => {
           <Divider orientation="vertical" flexItem />
           <Grid item md={0.61} xs={2.9}>
             <Box>
-              <Typography variant="subtitle2" sx={styles.titleCell}>
+              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Done
               </Typography>
               <Checkbox
