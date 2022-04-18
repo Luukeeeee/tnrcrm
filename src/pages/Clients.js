@@ -22,6 +22,7 @@ import snapShot from '../controllers/snapshotListener';
 import Input from '../components/Input';
 import style from '../components/styles/clientTableCellStyles';
 import Row from '../components/Row';
+import TasksModal from '../components/TasksModal';
 
 const TabPanel = ({ children, value, index }) => {
   return (
@@ -39,6 +40,7 @@ const TabPanel = ({ children, value, index }) => {
 const Clients = () => {
   const [clients, setClients] = useState([]);
   const [isShow, setIsShow] = useState(false);
+  const [taskShow, setTaskShow] = useState(false);
   const [sortedClients, setSortedClients] = useState([]);
   const [tabValue, setTabValue] = useState(0);
   const [client, setClient] = useState(null);
@@ -46,7 +48,7 @@ const Clients = () => {
   const clientTypes = ['All', 'Company', 'Individual', 'Sole Trader', 'Partnership', 'Trust', 'SMSF'];
 
   useEffect(() => {
-    snapShot('clients', setClients);
+    snapShot('clients', setClients, 'businessName');
     return () => setClients([]);
   }, []);
 
@@ -65,7 +67,7 @@ const Clients = () => {
 
   return (
     <Container>
-      <Box sx={{ mt: 11, mb: 2 }}>
+      <Box sx={{ mb: 2 }}>
         <Grid container>
           <Input
             gridxs={8}
@@ -117,7 +119,10 @@ const Clients = () => {
       {clientTypes.map((type, i) =>
         type === 'All' ? (
           <TabPanel value={tabValue} index={i} key={i}>
-            <TableContainer component={Paper} sx={{ maxHeight: 600 }}>
+            <TableContainer
+              component={Paper}
+              sx={{ maxHeight: 600, width: { xs: '90vw', md: 'auto' }, ml: { xs: -5.5, md: 0 } }}
+            >
               <Table stickyHeader aria-label="collapsible table">
                 <TableHead>
                   <TableRow>
@@ -144,7 +149,7 @@ const Clients = () => {
                   {sortedClients
                     .sort((a, b) => (a.businessName < b.businessName ? -1 : 1))
                     .map(row => (
-                      <Row key={row.id} row={row} setIsShow={setIsShow} setClient={setClient} />
+                      <Row key={row.id} row={row} setIsShow={setIsShow} setClient={setClient} setTaskShow={setTaskShow} />
                     ))}
                 </TableBody>
               </Table>
@@ -180,7 +185,13 @@ const Clients = () => {
                     .filter(client => client.clientType === type)
                     .sort((a, b) => (a.businessName < b.businessName ? -1 : 1))
                     .map(row => (
-                      <Row key={row.id} row={row} setIsShow={setIsShow} setClient={setClient} />
+                      <Row
+                        key={row.id}
+                        row={row}
+                        setIsShow={setIsShow}
+                        setClient={setClient}
+                        setTaskShow={setTaskShow}
+                      />
                     ))}
                 </TableBody>
               </Table>
@@ -189,6 +200,7 @@ const Clients = () => {
         )
       )}
       <ClientsModal isShow={isShow} setIsShow={setIsShow} client={client} setClient={setClient} />
+      <TasksModal taskShow={taskShow} setTaskShow={setTaskShow} client={client} setClient={setClient} />
     </Container>
   );
 };

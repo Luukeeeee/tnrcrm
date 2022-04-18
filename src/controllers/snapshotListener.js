@@ -1,18 +1,18 @@
-import { collection, onSnapshot } from 'firebase/firestore';
+import { collection, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db } from '../firebase';
 
-// eslint-disable-next-line import/no-anonymous-default-export
-export default (colName, setState) => {
-  onSnapshot(collection(db, colName), snapshot => {
+const snapShot = (colName, setState, order, desc = false) => {
+  const q = query(collection(db, colName), orderBy(order, desc ? 'desc' : 'asc'));
+  onSnapshot(q, snapshot => {
     snapshot.docChanges().forEach(change => {
       if (change.type === 'added') {
         setState(pre => [...pre, { ...change.doc.data(), id: change.doc.id }]);
       }
       if (change.type === 'modified') {
         setState(pre => {
-            const arr = pre.filter(doc => doc.id !== change.doc.id);
-            return [...arr, { ...change.doc.data(), id: change.doc.id }];
-          });
+          const arr = pre.filter(doc => doc.id !== change.doc.id);
+          return [...arr, { ...change.doc.data(), id: change.doc.id }];
+        });
       }
       if (change.type === 'removed') {
         setState(pre => {
@@ -23,3 +23,5 @@ export default (colName, setState) => {
     });
   });
 };
+
+export default snapShot;

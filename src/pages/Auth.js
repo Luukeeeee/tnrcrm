@@ -121,7 +121,7 @@ const Auth = () => {
                 name="position"
                 label="Position"
                 value={position}
-                items={['Manager', 'Accountant', 'Bookkeeper', 'Receptionist', 'Financial']}
+                items={['Manager', 'Admin', 'Accountant', 'Bookkeeper', 'Receptionist']}
                 handleChange={e => setPosition(e.target.value)}
               />
             )}

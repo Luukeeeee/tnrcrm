@@ -15,13 +15,24 @@ import {
 import { Link } from 'react-router-dom';
 import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
+import MenuIcon from '@mui/icons-material/Menu';
 
 import { auth } from '../firebase';
 import StaffAvatar from './StaffAvatar';
+import ConditionRendering from './ConditionRendering';
 
 const Navbar = ({ user }) => {
+  const [menu, setMenu] = useState(null);
   const [userMenu, setUserMenu] = useState(null);
   const navigation = useNavigate();
+
+  const handleOpenMenu = e => {
+    setMenu(e.currentTarget);
+  };
+
+  const handleCloseMenu = () => {
+    setMenu(null);
+  };
 
   const handleOpenUserMenu = e => {
     setUserMenu(e.currentTarget);
@@ -36,23 +47,71 @@ const Navbar = ({ user }) => {
     navigation('/auth');
   };
 
-  const pages = [{ page: 'Clients', path: '/clients' }];
+  const pages = [
+    { page: 'Clients', path: '/clients' },
+    { page: 'Staffs', path: '/staffs', access: ['Manager', 'Bookkeeper'] }
+  ];
 
   return (
-    <AppBar position="fixed" maxwidth="lg">
+    <AppBar position="sticky" maxwidth="lg" sx={{mb: 4}}>
       <Container>
         <Toolbar sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Box sx={{ display: 'flex' }}>
+          <Box>
+            <IconButton onClick={handleOpenMenu} sx={{ p: 0.5, display: { xs: 'block', md: 'none' } }}>
+              <MenuIcon color="action" />
+            </IconButton>
+            <Menu
+              sx={{ mt: '45px' }}
+              id="menu"
+              anchorEl={menu}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right'
+              }}
+              open={Boolean(menu)}
+              onClose={handleCloseMenu}
+            >
+              {pages.map(page => (
+                <MenuItem key={page.page} component={Link} to={page.path}>
+                  <Typography textAlign="center" variant="subtitle2">
+                    {page.page}
+                  </Typography>
+                </MenuItem>
+              ))}
+            </Menu>
+          </Box>
+          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
             <Avatar src="./img/tnr-log.png" alt="logo" variant="rounded" component={Link} to="/" />
-            <Typography variant="h4" ml={1} mr={2}>
+            <Typography variant="h4" ml={1}>
+              T & R Accountants
+            </Typography>
+          </Box>
+          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            <Avatar src="./img/tnr-log.png" alt="logo" variant="rounded" component={Link} to="/" />
+            <Typography variant="h6" ml={1}>
               T & R Accountants
             </Typography>
           </Box>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map(page => (
-              <Button key={page.page} sx={{ my: 2, color: 'white', display: 'block' }} component={Link} to={page.path}>
-                {page.page}
-              </Button>
+              <ConditionRendering conditionString={!page.access || page.access.includes(user.position)} key={page.page}>
+                <Button
+                  sx={{
+                    my: 2,
+                    color: 'white',
+                    display: 'block'
+                  }}
+                  component={Link}
+                  to={page.path}
+                >
+                  {page.page}
+                </Button>
+              </ConditionRendering>
             ))}
           </Box>
           <Box sx={{ flexGrow: 0 }}>

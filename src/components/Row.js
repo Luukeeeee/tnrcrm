@@ -25,10 +25,11 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import AddTaskIcon from '@mui/icons-material/AddTask';
 import { copyText } from '../controllers/scripts';
 import rowItemHoverStyle from './styles/rowItemHoverStyle';
 
-const Row = ({ row, setIsShow, setClient }) => {
+const Row = ({ row, setIsShow, setClient, setTaskShow }) => {
   const [open, setOpen] = useState(false);
   const [memo, setMemo] = useState('');
   const [memos, setMemos] = useState([]);
@@ -36,7 +37,8 @@ const Row = ({ row, setIsShow, setClient }) => {
   const setDialog = useContext(DialogContext);
 
   useEffect(() => {
-    snapShot('memos', setMemos);
+    snapShot('memos', setMemos, 'createdAt', true);
+    console.log(user);
     return () => setMemos([]);
   }, []);
   const deleteMemos = async id => {
@@ -52,6 +54,10 @@ const Row = ({ row, setIsShow, setClient }) => {
   };
   const editClient = client => {
     setIsShow(true);
+    setClient(client);
+  };
+  const addTask = client => {
+    setTaskShow(true);
     setClient(client);
   };
   const deleteClient = async id => {
@@ -125,6 +131,9 @@ const Row = ({ row, setIsShow, setClient }) => {
             </IconButton>
             <IconButton onClick={() => openDialog(row.id)}>
               <DeleteIcon />
+            </IconButton>
+            <IconButton onClick={() => addTask(row)}>
+              <AddTaskIcon />
             </IconButton>
           </Box>
         </TableCell>

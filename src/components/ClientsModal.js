@@ -1,8 +1,6 @@
 import { Box, Modal, Typography, Grid, Button } from '@mui/material';
-import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import React, { useEffect, useState } from 'react';
 import { addDocu, updateDocu } from '../controllers/oneLevel';
-import { db } from '../firebase';
 import Input from './Input';
 import Selector from './Selector';
 
@@ -54,7 +52,7 @@ const ClientsModal = ({ isShow, setIsShow, client, setClient }) => {
   return (
     <Modal open={isShow} onClose={handleClose}>
       <Box sx={style}>
-        <Typography>{client ? 'Edit Client' : 'Add Client'}</Typography>
+        <Typography variant='h5' color='primary' mb={2}>{client ? 'Edit Client' : 'Add Client'}</Typography>
         <form action="submit" onSubmit={handleSubmit}>
           <Grid container spacing={2}>
             <Selector
@@ -143,7 +141,7 @@ const ClientsModal = ({ isShow, setIsShow, client, setClient }) => {
               handleChange={handleChange}
             />
           </Grid>
-          <Button type="submit">Submit</Button>
+          <Button type="submit" sx={{float: 'right', mt: 2}}>Submit</Button>
         </form>
       </Box>
     </Modal>
