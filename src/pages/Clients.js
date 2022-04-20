@@ -44,12 +44,17 @@ const Clients = () => {
   const [sortedClients, setSortedClients] = useState([]);
   const [tabValue, setTabValue] = useState(0);
   const [client, setClient] = useState(null);
+  const [memos, setMemos] = useState([]);
 
   const clientTypes = ['All', 'Company', 'Individual', 'Sole Trader', 'Partnership', 'Trust', 'SMSF'];
 
   useEffect(() => {
     snapShot('clients', setClients, 'businessName');
-    return () => setClients([]);
+    snapShot('memos', setMemos, 'createdAt', true);
+    return () => {
+      setClients([]);
+      setMemos({});
+    };
   }, []);
 
   useEffect(() => {
@@ -149,7 +154,14 @@ const Clients = () => {
                   {sortedClients
                     .sort((a, b) => (a.businessName < b.businessName ? -1 : 1))
                     .map(row => (
-                      <Row key={row.id} row={row} setIsShow={setIsShow} setClient={setClient} setTaskShow={setTaskShow} />
+                      <Row
+                        key={row.id}
+                        row={row}
+                        setIsShow={setIsShow}
+                        setClient={setClient}
+                        setTaskShow={setTaskShow}
+                        memos={memos}
+                      />
                     ))}
                 </TableBody>
               </Table>
@@ -191,6 +203,7 @@ const Clients = () => {
                         setIsShow={setIsShow}
                         setClient={setClient}
                         setTaskShow={setTaskShow}
+                        memos={memos}
                       />
                     ))}
                 </TableBody>

@@ -29,18 +29,11 @@ import AddTaskIcon from '@mui/icons-material/AddTask';
 import { copyText } from '../controllers/scripts';
 import rowItemHoverStyle from './styles/rowItemHoverStyle';
 
-const Row = ({ row, setIsShow, setClient, setTaskShow }) => {
+const Row = ({ row, setIsShow, setClient, setTaskShow, memos }) => {
   const [open, setOpen] = useState(false);
   const [memo, setMemo] = useState('');
-  const [memos, setMemos] = useState([]);
   const user = useContext(UserContext);
   const setDialog = useContext(DialogContext);
-
-  useEffect(() => {
-    snapShot('memos', setMemos, 'createdAt', true);
-    console.log(user);
-    return () => setMemos([]);
-  }, []);
   const deleteMemos = async id => {
     const batch = writeBatch(db);
     const deleteMemos = memos;

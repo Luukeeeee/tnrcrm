@@ -14,7 +14,7 @@ export default {
   taskCheckBox: { position: 'relative', bottom: 7 },
   checkBox: { display: 'flex', justifyContent: 'center' },
   taskRow: {
-    mt: 1,
+    mt: 2,
     ':hover': {
       boxShadow:
         'rgba(0, 0, 0, 0.24) 0px 3px 8px'

@@ -38,7 +38,7 @@ const StaffSelector = ({ value, id, columnName }) => {
   );
 };
 
-const BASRow = ({ item, memos }) => {
+const TAXRow = ({ item, memos, isOther }) => {
   const [open, setOpen] = useState(false);
   const user = useContext(UserContext);
 
@@ -85,7 +85,7 @@ const BASRow = ({ item, memos }) => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item md={0.5} xs={1.8}>
+          <Grid item md={1.5} xs={1.8}>
             <Box>
               <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Type
@@ -95,67 +95,17 @@ const BASRow = ({ item, memos }) => {
               </Typography>
             </Box>
           </Grid>
-          <Grid item md={0.6} xs={2.2}>
+          <Grid item md={1} xs={2.2}>
             <Box>
               <Typography variant="subtitle2" sx={titleCellStyle(item)}>
-                Period
+                {isOther ? 'Name' : 'Period'}
               </Typography>
               <Typography variant="caption" sx={styles.textCell}>
-                {item.period}
+                {isOther ? item.taskName : item.period}
               </Typography>
             </Box>
           </Grid>
-          <Divider orientation="vertical" flexItem />
-          <Grid item md={1.7} xs={12}>
-            <Box>
-              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
-                Estimate By
-              </Typography>
-              <Box sx={styles.textCell}>
-                {user.position === 'Manager' || user.position === 'Admin' ? (
-                  <StaffSelector value={item.estimateId} id={item.id} columnName="estimateId" />
-                ) : (
-                  <Typography variant="caption">{item.estimateId.name}</Typography>
-                )}
-                {item.estimateId.id !== '' && (
-                  <Checkbox
-                    checked={item.estimate}
-                    size="small"
-                    sx={styles.taskCheckBox}
-                    onChange={() => handleChange(true, item.id, item.estimateId.id, item.estimate, 'estimate')}
-                  />
-                )}
-              </Box>
-            </Box>
-          </Grid>
-          <Divider orientation="vertical" flexItem />
-          <Grid item md={0.7} xs={2.4}>
-            <Box>
-              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
-                EstApr
-              </Typography>
-              <Checkbox
-                checked={item.estimateApproved}
-                size="small"
-                sx={styles.checkBox}
-                onChange={() => handleChange(false, item.id, 'primary', item.estimateApproved, 'estimateApproved')}
-              />
-            </Box>
-          </Grid>
-          <Grid item md={0.53} xs={2.4}>
-            <Box>
-              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
-                Form
-              </Typography>
-              <Checkbox
-                checked={item.formPrepared}
-                size="small"
-                sx={styles.checkBox}
-                onChange={() => handleChange(true, item.id, item.estimateId.id, item.formPrepared, 'formPrepared')}
-              />
-            </Box>
-          </Grid>
-          <Grid item md={0.53} xs={2.4}>
+          <Grid item md={1} xs={4}>
             <Box>
               <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Inv
@@ -168,7 +118,7 @@ const BASRow = ({ item, memos }) => {
               />
             </Box>
           </Grid>
-          <Grid item md={0.53} xs={2.4}>
+          <Grid item md={1} xs={4}>
             <Box>
               <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Paid
@@ -181,7 +131,7 @@ const BASRow = ({ item, memos }) => {
               />
             </Box>
           </Grid>
-          <Grid item md={0.7} xs={2.36}>
+          <Grid item md={1} xs={4}>
             <Box>
               <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Lodged
@@ -195,30 +145,7 @@ const BASRow = ({ item, memos }) => {
             </Box>
           </Grid>
           <Divider orientation="vertical" flexItem />
-          <Grid item md={1.7} xs={12}>
-            <Box>
-              <Typography variant="subtitle2" sx={titleCellStyle(item)}>
-                Bookkeeper
-              </Typography>
-              <Box sx={styles.textCell}>
-                {user.position === 'Manager' || user.position === 'Admin' ? (
-                  <StaffSelector value={item.bookkeeperId} id={item.id} columnName="bookkeeperId" />
-                ) : (
-                  <Typography variant="caption">{item.bookkeeperId.name}</Typography>
-                )}
-                {item.bookkeeperId.id !== '' && (
-                  <Checkbox
-                    checked={item.bookkept}
-                    size="small"
-                    sx={styles.taskCheckBox}
-                    onChange={() => handleChange(true, item.id, item.bookkeeperId.id, item.bookkept, 'bookkept')}
-                  />
-                )}
-              </Box>
-            </Box>
-          </Grid>
-          <Divider orientation="vertical" flexItem />
-          <Grid item md={1.7} xs={9}>
+          <Grid item md={3} xs={9}>
             <Box>
               <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Accountant
@@ -243,7 +170,7 @@ const BASRow = ({ item, memos }) => {
             </Box>
           </Grid>
           <Divider orientation="vertical" flexItem />
-          <Grid item md={0.6} xs={2.9}>
+          <Grid item md={1.335} xs={2.9}>
             <Box>
               <Typography variant="subtitle2" sx={titleCellStyle(item)}>
                 Done
@@ -263,4 +190,4 @@ const BASRow = ({ item, memos }) => {
   );
 };
 
-export default BASRow;
+export default TAXRow;
