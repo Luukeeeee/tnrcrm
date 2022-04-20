@@ -66,7 +66,7 @@ const BASRow = ({ item, memos }) => {
     }
   };
 
-  const titleCellStyle = item => (item.urgent ? styles.titleCellUrgent : styles.titleCell);
+  const titleCellStyle = item => (item.urgent.status ? styles.titleCellUrgent : styles.titleCell);
 
   return (
     <Grid item md={12} xs={12} sx={styles.taskRow}>

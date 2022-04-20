@@ -15,6 +15,7 @@ import React, { useContext, useState } from 'react';
 import UserContext from '../context/UserContext';
 import { addDocu, deleteDocu, updateDocu } from '../controllers/oneLevel';
 import AddOutlinedIcon from '@mui/icons-material/AddOutlined';
+import { serverTimestamp } from 'firebase/firestore';
 
 const TaskRowCollapse = ({ open, item, memos }) => {
   const [price, setPrice] = useState(0);
@@ -57,20 +58,22 @@ const TaskRowCollapse = ({ open, item, memos }) => {
               <FormControlLabel
                 control={<Checkbox size="small" />}
                 label="Urgent"
-                checked={item.urgent}
-                onChange={() => updateDocu('tasks', item.id, { urgent: !item.urgent })}
+                checked={item.urgent.status}
+                onChange={() =>
+                  updateDocu('tasks', item.id, { urgent: { status: !item.urgent.status, createdAt: serverTimestamp() } })
+                }
               />
             </Grid>
           </Grid>
           {item.invAmount ? (
             <>
               <Typography variant="subtitle2">The charge would be</Typography>
-              <Typography variant="subtitle2" sx={{fontWeight: 800}}>{`$ ${item.invAmount}`}</Typography>
+              <Typography variant="subtitle2" sx={{ fontWeight: 800 }}>{`$ ${item.invAmount}`}</Typography>
             </>
           ) : (
             <Typography variant="subtitle2">Haven't set price.</Typography>
           )}
-          {item.urgent && (
+          {item.urgent.status && (
             <Typography varient="subtitle2" color="red">
               Urgent!!
             </Typography>
